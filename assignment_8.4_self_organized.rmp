@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="9.8.000">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="9.8.000" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="retrieve" compatibility="9.8.000" expanded="true" height="68" name="Retrieve mysterious_measurement" width="90" x="179" y="289">
+        <parameter key="repository_entry" value="//Local Repository/mysterious_measurement"/>
+      </operator>
+      <operator activated="true" class="som:som" compatibility="5.2.000" expanded="true" height="103" name="SOM (2)" width="90" x="447" y="289">
+        <parameter key="training_rounds" value="1000"/>
+        <parameter key="net_size" value="own"/>
+        <parameter key="net_size_x" value="20"/>
+        <parameter key="net_size_y" value="25"/>
+        <parameter key="initial_learning_rate" value="0.9"/>
+        <parameter key="learning_rate_function" value="inverse-of-time"/>
+        <parameter key="use_toroid_network" value="false"/>
+        <parameter key="use_local_random_seed" value="false"/>
+        <parameter key="local_random_seed" value="1992"/>
+      </operator>
+      <connect from_op="Retrieve mysterious_measurement" from_port="output" to_op="SOM (2)" to_port="example set"/>
+      <connect from_op="SOM (2)" from_port="example set" to_port="result 2"/>
+      <connect from_op="SOM (2)" from_port="original" to_port="result 3"/>
+      <connect from_op="SOM (2)" from_port="preprocessing model" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+      <portSpacing port="sink_result 4" spacing="0"/>
+    </process>
+  </operator>
+</process>

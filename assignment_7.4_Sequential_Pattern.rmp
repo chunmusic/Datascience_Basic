@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="9.8.000">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="9.8.000" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="retrieve" compatibility="9.8.000" expanded="true" height="68" name="Retrieve coffeeshop_2" width="90" x="45" y="85">
+        <parameter key="repository_entry" value="coffeeshop_2"/>
+      </operator>
+      <operator activated="true" class="date_to_numerical" compatibility="9.8.000" expanded="true" height="82" name="Date to Numerical" width="90" x="45" y="238">
+        <parameter key="attribute_name" value="Date"/>
+        <parameter key="time_unit" value="day"/>
+        <parameter key="millisecond_relative_to" value="second"/>
+        <parameter key="second_relative_to" value="minute"/>
+        <parameter key="minute_relative_to" value="hour"/>
+        <parameter key="hour_relative_to" value="day"/>
+        <parameter key="day_relative_to" value="week"/>
+        <parameter key="week_relative_to" value="epoch"/>
+        <parameter key="month_relative_to" value="year"/>
+        <parameter key="quarter_relative_to" value="year"/>
+        <parameter key="half_year_relative_to" value="year"/>
+        <parameter key="year_relative_to" value="epoch"/>
+        <parameter key="keep_old_attribute" value="false"/>
+      </operator>
+      <operator activated="true" class="numerical_to_binominal" compatibility="9.8.000" expanded="true" height="82" name="Numerical to Binominal" width="90" x="45" y="391">
+        <parameter key="attribute_filter_type" value="subset"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value="Cake|Coffee|Cookies|Croissant|Donut|Hot Chocolate|Mineral Water|Muffin|Tea"/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="numeric"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="real"/>
+        <parameter key="block_type" value="value_series"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_series_end"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="min" value="0.0"/>
+        <parameter key="max" value="0.0"/>
+      </operator>
+      <operator activated="true" class="generalized_sequential_patterns" compatibility="9.8.000" expanded="true" height="82" name="GSP" width="90" x="380" y="187">
+        <parameter key="customer_id" value="Customer ID"/>
+        <parameter key="time_attribute" value="Date"/>
+        <parameter key="min_support" value="0.3"/>
+        <parameter key="window_size" value="50.0"/>
+        <parameter key="max_gap" value="20.0"/>
+        <parameter key="min_gap" value="2.0"/>
+        <parameter key="positive_value" value="true"/>
+      </operator>
+      <connect from_op="Retrieve coffeeshop_2" from_port="output" to_op="Date to Numerical" to_port="example set input"/>
+      <connect from_op="Date to Numerical" from_port="example set output" to_op="Numerical to Binominal" to_port="example set input"/>
+      <connect from_op="Numerical to Binominal" from_port="example set output" to_op="GSP" to_port="example set"/>
+      <connect from_op="GSP" from_port="example set" to_port="result 1"/>
+      <connect from_op="GSP" from_port="patterns" to_port="result 2"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+    </process>
+  </operator>
+</process>
