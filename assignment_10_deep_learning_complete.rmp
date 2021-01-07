@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="9.8.000">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="9.8.000" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="image_handling:read_image_meta_data" compatibility="0.2.001" expanded="true" height="68" name="Training" width="90" x="112" y="187">
+        <parameter key="directory" value="/Users/chunzps/Downloads/MNIST dataset/trainingSet"/>
+        <parameter key="use_label" value="true"/>
+      </operator>
+      <operator activated="true" class="image_handling:image_pre_processor" compatibility="0.2.001" expanded="true" height="103" name="Pre-Process Images" width="90" x="313" y="238">
+        <parameter key="path" value="Path"/>
+        <parameter key="use_label" value="false"/>
+        <process expanded="true">
+          <connect from_port="transform" to_port="transform"/>
+          <portSpacing port="source_transform" spacing="0"/>
+          <portSpacing port="sink_transform" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="image_handling:read_image_meta_data" compatibility="0.2.001" expanded="true" height="68" name="Test" width="90" x="112" y="442">
+        <parameter key="directory" value="/Users/chunzps/Downloads/MNIST dataset/testSet"/>
+        <parameter key="use_label" value="true"/>
+      </operator>
+      <operator activated="true" class="image_handling:image_pre_processor" compatibility="0.2.001" expanded="true" height="103" name="Pre-Process Images (2)" width="90" x="313" y="442">
+        <parameter key="path" value="Path"/>
+        <parameter key="use_label" value="false"/>
+        <process expanded="true">
+          <connect from_port="transform" to_port="transform"/>
+          <portSpacing port="source_transform" spacing="0"/>
+          <portSpacing port="sink_transform" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="9.8.000" expanded="true" height="103" name="Multiply" width="90" x="447" y="595"/>
+      <operator activated="true" class="deeplearning:dl4j_tensor_sequential_neural_network" compatibility="1.0.001" expanded="true" height="145" name="Deep Learning (Tensor)" width="90" x="514" y="187">
+        <parameter key="loss_function" value="Multiclass Cross Entropy (Classification)"/>
+        <parameter key="epochs" value="100"/>
+        <parameter key="use_early_stopping" value="false"/>
+        <parameter key="condition_strategy" value="score improvement"/>
+        <parameter key="patience" value="5"/>
+        <parameter key="minimal_score_improvement" value="0.0"/>
+        <parameter key="best_epoch_score" value="0.01"/>
+        <parameter key="max_iteration_score" value="3.0"/>
+        <parameter key="max_iteration_time" value="10"/>
+        <parameter key="use_miniBatch" value="false"/>
+        <parameter key="batch_size" value="32"/>
+        <parameter key="updater" value="Adam"/>
+        <parameter key="learning_rate" value="5.0E-4"/>
+        <parameter key="momentum" value="0.9"/>
+        <parameter key="rho" value="0.95"/>
+        <parameter key="epsilon" value="1.0E-6"/>
+        <parameter key="beta1" value="0.9"/>
+        <parameter key="beta2" value="0.999"/>
+        <parameter key="RMSdecay" value="0.95"/>
+        <parameter key="weight_initialization" value="Xavier"/>
+        <parameter key="bias_initialization" value="0.0"/>
+        <parameter key="use_regularization" value="false"/>
+        <parameter key="l1_strength" value="0.1"/>
+        <parameter key="l2_strength" value="0.1"/>
+        <parameter key="optimization_method" value="Stochastic Gradient Descent"/>
+        <parameter key="cudnn_algo_mode" value="Prefer fastest"/>
+        <parameter key="backpropagation" value="Standard"/>
+        <parameter key="backpropagation_length" value="50"/>
+        <parameter key="infer_input_shape" value="true"/>
+        <parameter key="network_type" value="Simple Neural Network"/>
+        <parameter key="log_each_epoch" value="true"/>
+        <parameter key="epochs_per_log" value="10"/>
+        <parameter key="use_local_random_seed" value="false"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <process expanded="true">
+          <operator activated="false" class="deeplearning:dl4j_convolutional_layer" compatibility="1.0.001" expanded="true" height="68" name="Add Convolutional Layer" width="90" x="313" y="85">
+            <parameter key="number_of_activation_maps" value="32"/>
+            <parameter key="kernel_size" value="3.3"/>
+            <parameter key="stride_size" value="1.1"/>
+            <parameter key="activation_function" value="Leaky ReLU"/>
+            <parameter key="use_dropout" value="false"/>
+            <parameter key="dropout_rate" value="0.25"/>
+            <parameter key="overwrite_networks_weight_initialization" value="false"/>
+            <parameter key="weight_initialization" value="Normal"/>
+            <parameter key="overwrite_networks_bias_initialization" value="false"/>
+            <parameter key="bias_initialization" value="0.0"/>
+          </operator>
+          <operator activated="false" class="deeplearning:dl4j_batchnormalization_layer" compatibility="1.0.001" expanded="true" height="68" name="Add Batch Normalization Layer" width="90" x="112" y="136">
+            <parameter key="gamma" value="1.0"/>
+            <parameter key="beta" value="0.0"/>
+            <parameter key="lock_gamma_and_beta" value="false"/>
+            <parameter key="decay" value="0.9"/>
+            <parameter key="epsilon" value="1.0E-5"/>
+          </operator>
+          <operator activated="false" class="deeplearning:dl4j_convolutional_layer" compatibility="1.0.001" expanded="true" height="68" name="Add Convolutional Layer (2)" width="90" x="112" y="238">
+            <parameter key="number_of_activation_maps" value="32"/>
+            <parameter key="kernel_size" value="3.3"/>
+            <parameter key="stride_size" value="2.2"/>
+            <parameter key="activation_function" value="Leaky ReLU"/>
+            <parameter key="use_dropout" value="false"/>
+            <parameter key="dropout_rate" value="0.25"/>
+            <parameter key="overwrite_networks_weight_initialization" value="false"/>
+            <parameter key="weight_initialization" value="Normal"/>
+            <parameter key="overwrite_networks_bias_initialization" value="false"/>
+            <parameter key="bias_initialization" value="0.0"/>
+          </operator>
+          <operator activated="false" class="deeplearning:dl4j_batchnormalization_layer" compatibility="1.0.001" expanded="true" height="68" name="Add Batch Normalization Layer (2)" width="90" x="112" y="340">
+            <parameter key="gamma" value="1.0"/>
+            <parameter key="beta" value="0.0"/>
+            <parameter key="lock_gamma_and_beta" value="false"/>
+            <parameter key="decay" value="0.9"/>
+            <parameter key="epsilon" value="1.0E-5"/>
+          </operator>
+          <operator activated="false" class="deeplearning:dl4j_convolutional_layer" compatibility="1.0.001" expanded="true" height="68" name="Add Convolutional Layer (3)" width="90" x="112" y="442">
+            <parameter key="number_of_activation_maps" value="64"/>
+            <parameter key="kernel_size" value="3.3"/>
+            <parameter key="stride_size" value="1.1"/>
+            <parameter key="activation_function" value="Leaky ReLU"/>
+            <parameter key="use_dropout" value="false"/>
+            <parameter key="dropout_rate" value="0.25"/>
+            <parameter key="overwrite_networks_weight_initialization" value="false"/>
+            <parameter key="weight_initialization" value="Normal"/>
+            <parameter key="overwrite_networks_bias_initialization" value="false"/>
+            <parameter key="bias_initialization" value="0.0"/>
+          </operator>
+          <operator activated="false" class="deeplearning:dl4j_batchnormalization_layer" compatibility="1.0.001" expanded="true" height="68" name="Add Batch Normalization Layer (3)" width="90" x="112" y="544">
+            <parameter key="gamma" value="1.0"/>
+            <parameter key="beta" value="0.0"/>
+            <parameter key="lock_gamma_and_beta" value="false"/>
+            <parameter key="decay" value="0.9"/>
+            <parameter key="epsilon" value="1.0E-5"/>
+          </operator>
+          <operator activated="false" class="deeplearning:dl4j_convolutional_layer" compatibility="1.0.001" expanded="true" height="68" name="Add Convolutional Layer (4)" width="90" x="112" y="646">
+            <parameter key="number_of_activation_maps" value="64"/>
+            <parameter key="kernel_size" value="3.3"/>
+            <parameter key="stride_size" value="2.2"/>
+            <parameter key="activation_function" value="Leaky ReLU"/>
+            <parameter key="use_dropout" value="false"/>
+            <parameter key="dropout_rate" value="0.25"/>
+            <parameter key="overwrite_networks_weight_initialization" value="false"/>
+            <parameter key="weight_initialization" value="Normal"/>
+            <parameter key="overwrite_networks_bias_initialization" value="false"/>
+            <parameter key="bias_initialization" value="0.0"/>
+          </operator>
+          <operator activated="false" class="deeplearning:dl4j_batchnormalization_layer" compatibility="1.0.001" expanded="true" height="68" name="Add Batch Normalization Layer (4)" width="90" x="112" y="748">
+            <parameter key="gamma" value="1.0"/>
+            <parameter key="beta" value="0.0"/>
+            <parameter key="lock_gamma_and_beta" value="false"/>
+            <parameter key="decay" value="0.9"/>
+            <parameter key="epsilon" value="1.0E-5"/>
+          </operator>
+          <operator activated="false" class="deeplearning:dl4j_dense_layer" compatibility="1.0.001" expanded="true" height="68" name="Add Fully-Connected Layer" width="90" x="380" y="238">
+            <parameter key="neurons" value="128"/>
+            <parameter key="activation_function" value="Leaky ReLU"/>
+            <parameter key="use_dropout" value="false"/>
+            <parameter key="dropout_rate" value="0.25"/>
+            <parameter key="overwrite_networks_weight_initialization" value="false"/>
+            <parameter key="weight_initialization" value="Normal"/>
+            <parameter key="overwrite_networks_bias_initialization" value="false"/>
+            <parameter key="bias_initialization" value="0.0"/>
+          </operator>
+          <operator activated="false" class="deeplearning:dl4j_batchnormalization_layer" compatibility="1.0.001" expanded="true" height="68" name="Add Batch Normalization Layer (5)" width="90" x="380" y="340">
+            <parameter key="gamma" value="1.0"/>
+            <parameter key="beta" value="0.0"/>
+            <parameter key="lock_gamma_and_beta" value="false"/>
+            <parameter key="decay" value="0.9"/>
+            <parameter key="epsilon" value="1.0E-5"/>
+          </operator>
+          <operator activated="false" class="deeplearning:dl4j_dropout_layer" compatibility="1.0.001" expanded="true" height="68" name="Add Dropout Layer" width="90" x="380" y="442">
+            <parameter key="use_dropout" value="true"/>
+            <parameter key="dropout_rate" value="0.5"/>
+          </operator>
+          <operator activated="false" class="deeplearning:dl4j_dropout_layer" compatibility="1.0.001" expanded="true" height="68" name="Add Dropout Layer (2)" width="90" x="447" y="85">
+            <parameter key="use_dropout" value="true"/>
+            <parameter key="dropout_rate" value="0.5"/>
+          </operator>
+          <operator activated="true" class="deeplearning:dl4j_dense_layer" compatibility="1.0.001" expanded="true" height="68" name="Add Fully-Connected Layer (5)" width="90" x="179" y="34">
+            <parameter key="neurons" value="150"/>
+            <parameter key="activation_function" value="Leaky ReLU"/>
+            <parameter key="use_dropout" value="false"/>
+            <parameter key="dropout_rate" value="0.25"/>
+            <parameter key="overwrite_networks_weight_initialization" value="false"/>
+            <parameter key="weight_initialization" value="Normal"/>
+            <parameter key="overwrite_networks_bias_initialization" value="false"/>
+            <parameter key="bias_initialization" value="0.0"/>
+          </operator>
+          <operator activated="true" class="deeplearning:dl4j_dense_layer" compatibility="1.0.001" expanded="true" height="68" name="Add Fully-Connected Layer (4)" width="90" x="648" y="34">
+            <parameter key="neurons" value="200"/>
+            <parameter key="activation_function" value="Leaky ReLU"/>
+            <parameter key="use_dropout" value="false"/>
+            <parameter key="dropout_rate" value="0.25"/>
+            <parameter key="overwrite_networks_weight_initialization" value="false"/>
+            <parameter key="weight_initialization" value="Normal"/>
+            <parameter key="overwrite_networks_bias_initialization" value="false"/>
+            <parameter key="bias_initialization" value="0.0"/>
+          </operator>
+          <operator activated="true" class="deeplearning:dl4j_dense_layer" compatibility="1.0.001" expanded="true" height="68" name="Add Fully-Connected Layer (3)" width="90" x="849" y="34">
+            <parameter key="neurons" value="10"/>
+            <parameter key="activation_function" value="Softmax"/>
+            <parameter key="use_dropout" value="false"/>
+            <parameter key="dropout_rate" value="0.25"/>
+            <parameter key="overwrite_networks_weight_initialization" value="false"/>
+            <parameter key="weight_initialization" value="Normal"/>
+            <parameter key="overwrite_networks_bias_initialization" value="false"/>
+            <parameter key="bias_initialization" value="0.0"/>
+          </operator>
+          <connect from_port="in layerArchitecture" to_op="Add Fully-Connected Layer (5)" to_port="layerArchitecture"/>
+          <connect from_op="Add Batch Normalization Layer (2)" from_port="layerArchitecture" to_op="Add Convolutional Layer (3)" to_port="layerArchitecture"/>
+          <connect from_op="Add Convolutional Layer (3)" from_port="layerArchitecture" to_op="Add Batch Normalization Layer (3)" to_port="layerArchitecture"/>
+          <connect from_op="Add Batch Normalization Layer (3)" from_port="layerArchitecture" to_op="Add Convolutional Layer (4)" to_port="layerArchitecture"/>
+          <connect from_op="Add Convolutional Layer (4)" from_port="layerArchitecture" to_op="Add Batch Normalization Layer (4)" to_port="layerArchitecture"/>
+          <connect from_op="Add Batch Normalization Layer (5)" from_port="layerArchitecture" to_op="Add Dropout Layer" to_port="layerArchitecture"/>
+          <connect from_op="Add Fully-Connected Layer (5)" from_port="layerArchitecture" to_op="Add Fully-Connected Layer (4)" to_port="layerArchitecture"/>
+          <connect from_op="Add Fully-Connected Layer (4)" from_port="layerArchitecture" to_op="Add Fully-Connected Layer (3)" to_port="layerArchitecture"/>
+          <connect from_op="Add Fully-Connected Layer (3)" from_port="layerArchitecture" to_port="out layerArchitecture"/>
+          <portSpacing port="source_in layerArchitecture" spacing="0"/>
+          <portSpacing port="sink_out layerArchitecture" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="nd4j:apply_model_generic" compatibility="1.0.000" expanded="true" height="82" name="Apply Model (Generic)" width="90" x="715" y="289"/>
+      <operator activated="true" class="append" compatibility="9.8.000" expanded="true" height="82" name="Append" width="90" x="916" y="442">
+        <parameter key="datamanagement" value="double_array"/>
+        <parameter key="data_management" value="auto"/>
+        <parameter key="merge_type" value="all"/>
+      </operator>
+      <operator activated="true" class="performance_classification" compatibility="9.8.000" expanded="true" height="82" name="Performance" width="90" x="782" y="646">
+        <parameter key="main_criterion" value="first"/>
+        <parameter key="accuracy" value="true"/>
+        <parameter key="classification_error" value="false"/>
+        <parameter key="kappa" value="false"/>
+        <parameter key="weighted_mean_recall" value="false"/>
+        <parameter key="weighted_mean_precision" value="false"/>
+        <parameter key="spearman_rho" value="false"/>
+        <parameter key="kendall_tau" value="false"/>
+        <parameter key="absolute_error" value="false"/>
+        <parameter key="relative_error" value="false"/>
+        <parameter key="relative_error_lenient" value="false"/>
+        <parameter key="relative_error_strict" value="false"/>
+        <parameter key="normalized_absolute_error" value="false"/>
+        <parameter key="root_mean_squared_error" value="false"/>
+        <parameter key="root_relative_squared_error" value="false"/>
+        <parameter key="squared_error" value="false"/>
+        <parameter key="correlation" value="false"/>
+        <parameter key="squared_correlation" value="false"/>
+        <parameter key="cross-entropy" value="false"/>
+        <parameter key="margin" value="false"/>
+        <parameter key="soft_margin_loss" value="false"/>
+        <parameter key="logistic_loss" value="false"/>
+        <parameter key="skip_undefined_labels" value="true"/>
+        <parameter key="use_example_weights" value="true"/>
+        <list key="class_weights"/>
+      </operator>
+      <connect from_op="Training" from_port="output" to_op="Pre-Process Images" to_port="example set"/>
+      <connect from_op="Pre-Process Images" from_port="tensor" to_op="Deep Learning (Tensor)" to_port="training set"/>
+      <connect from_op="Test" from_port="output" to_op="Pre-Process Images (2)" to_port="example set"/>
+      <connect from_op="Pre-Process Images (2)" from_port="tensor" to_op="Multiply" to_port="input"/>
+      <connect from_op="Multiply" from_port="output 1" to_op="Deep Learning (Tensor)" to_port="test set"/>
+      <connect from_op="Multiply" from_port="output 2" to_op="Apply Model (Generic)" to_port="unlabelled data"/>
+      <connect from_op="Deep Learning (Tensor)" from_port="model" to_op="Apply Model (Generic)" to_port="model"/>
+      <connect from_op="Deep Learning (Tensor)" from_port="history" to_port="result 2"/>
+      <connect from_op="Apply Model (Generic)" from_port="labelled data" to_op="Append" to_port="example set 1"/>
+      <connect from_op="Append" from_port="merged set" to_op="Performance" to_port="labelled data"/>
+      <connect from_op="Performance" from_port="performance" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+    </process>
+  </operator>
+</process>
